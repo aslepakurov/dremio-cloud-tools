@@ -5,7 +5,7 @@ metadata:
   name: dremio-coordinator
 spec:
   serviceName: "dremio-cluster-pod"
-  replicas: {{.Values.coordinator.count}}
+  replicas: {{.Values.coordinator.count}}}}}}}}
   podManagementPolicy: "Parallel"
   revisionHistoryLimit: 1
   selector:
