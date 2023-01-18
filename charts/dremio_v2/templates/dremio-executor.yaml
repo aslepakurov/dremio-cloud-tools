@@ -27,7 +27,7 @@ spec:
         {{- include "dremio.executor.podAnnotations" (list $ $engineName) | nindent 8}}
     spec:
       {{- include "dremio.executor.serviceAccount" (list $ $engineName) | nindent 6}}
-      terminationGracePeriodSeconds: 120
+      terminationGracePeriodSeconds: {{ $.Values.executor.stopTimeout }}
       {{- include "dremio.executor.nodeSelector" (list $ $engineName) | nindent 6}}
       {{- include "dremio.executor.tolerations" (list $ $engineName) | nindent 6}}
       containers:
@@ -60,6 +60,8 @@ spec:
             fieldRef:
               fieldPath: status.podIP
         {{- end }}
+        - name: DREMIO_STOP_TIMEOUT
+          value: {{ $.Values.executor.stopTimeout }}
         - name: DREMIO_MAX_HEAP_MEMORY_SIZE_MB
           value: "{{ template "dremio.executor.heapMemory" (list $ $engineName) }}"
         - name: DREMIO_MAX_DIRECT_MEMORY_SIZE_MB

@@ -129,6 +129,8 @@ coordinator:
       # kubectl create secret tls ${TLS_SECRET_NAME} --key ${KEY_FILE} --cert ${CERT_FILE}
       secret: dremio-tls-secret-flight
 
+  #seconds
+  stopTimeout: 120
 # Dremio Executor
 executor:
   # CPU & Memory
@@ -202,6 +204,9 @@ executor:
   #podLabels: {}
   #nodeSelector: {}
   #tolerations: []
+
+  #seconds
+  stopTimeout: 120
 
   # Engine Overrides
   #

@@ -24,7 +24,7 @@ spec:
         {{- include "dremio.coordinator.podAnnotations" $ | nindent 8 }}
     spec:
       {{- include "dremio.coordinator.serviceAccount" $ | nindent 6 }}
-      terminationGracePeriodSeconds: 120
+      terminationGracePeriodSeconds: {{ $.Values.coordinator.stopTimeout }}
       {{- include "dremio.coordinator.nodeSelector" $ | nindent 6 }}
       {{- include "dremio.coordinator.tolerations" $ | nindent 6 }}
       containers:
@@ -35,6 +35,10 @@ spec:
           requests:
             cpu: {{ $.Values.coordinator.cpu }}
             memory: {{ $.Values.coordinator.memory }}M
+        lifecycle:
+          preStop:
+            exec:
+              command: [ "/opt/dremio/bin/dremio stop" ]
         volumeMounts:
         - name: dremio-config
           mountPath: /opt/dremio/conf
@@ -58,6 +62,8 @@ spec:
             fieldRef:
               fieldPath: status.podIP
         {{- end }}
+        - name: DREMIO_STOP_TIMEOUT
+          value: {{ $.Values.coordinator.stopTimeout }}
         - name: DREMIO_MAX_HEAP_MEMORY_SIZE_MB
           value: "{{ template "dremio.coordinator.heapMemory" $ }}"
         - name: DREMIO_MAX_DIRECT_MEMORY_SIZE_MB
